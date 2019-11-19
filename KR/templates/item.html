@@ -1,0 +1,80 @@
+{% import "bootstrap/wtf.html" as wtf %}
+{% extends "baseTemplate.html" %}
+
+{% block content %}
+<div class="card" style="margin: 2px;padding:8px">
+<div class="row">
+<div style="background-color:transparent; margin:auto">                    
+<img style="width: 600px; margin:4px;"src="..{{res.image}}" class="rounded border border-secondary" alt="Cinque Terre" style="margin: 1%; margin-right:80%;"> 
+</div></div>
+
+<div class="card w-100" style="margin:auto">
+        <div class="card-body">
+          <h5 class="card-title">{{res.title}}</h5>
+          <p class="card-text">{{res.description}}</p>
+          <p class="card-text">{{res.address}}</p>
+          
+
+          <a href="/write_comment/{{res.id}}" class="btn btn-secondary">Post Review</a>
+          <a href="https://www.google.com.au/maps/place/{{res.address}}" class="btn btn-secondary">Look it up on google</a>
+          <div class="mapouter" style="margin: 10px;"><div class="gmap_canvas">
+            <iframe width="500" height="500", id="gmap_canvas" 
+            src="https://maps.google.com/maps?q={{ res.title|replace(' ', '+') }}&t=&z=13&ie=UTF8&iwloc=&output=embed"" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe><a href="https://www.embedgooglemap.net/blog/divi-discount-code-elegant-themes-coupon/">divi website builder</a></div><style>.mapouter{position:relative;text-align:right;height:500px;width:600px;}.gmap_canvas {overflow:hidden;background:none!important;height:500px;width:600px;}</style></div>
+        </div></                                   
+                                 </div>
+
+                            </div></div>
+
+
+                            {% for comment in comments %}
+                            <div class="card w-100" style="margin:auto;width:98%">
+                                <p></p>
+                                <table style="width:98%; padding:8px; margin:auto;" >
+                                        <tr style="width: 90%;">
+                                          <th style="float: left;">{{comment.user_id}}</th>
+                                          <th style="float: right; margin-right: 10px">{{comment.date}}</th>
+                                        </tr>
+                                       </table>
+                                       <img src="..{{comment.image}}" alt="{{comment.comment}}" style="width:98%; margin:auto"> 
+                                       <table style="width:100%">
+                                      <tr style="width:95%; padding:8px; margin:auto;">
+                                            <th style="float: left;"><p style="font-weight: 100;">{{comment.comment}}<p></th>
+                                            <th style="float: right; margin-right: 10px">
+                                                {% for i in range(comment.rate) %}
+                                                    ⭐
+                                                   {% endfor %}</p></th>
+
+                                        </td>
+                                        </tr>
+                                      </table>
+                                    
+                                    <h5 class="card-title"> </h5><h5 style="float: right;"></h5>
+                                   
+
+                                    
+                                    <div>
+                          </div>
+                          {% endfor %}
+
+
+                
+    
+{% endblock %}
+
+
+
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>

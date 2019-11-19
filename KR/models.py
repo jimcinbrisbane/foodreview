@@ -6,12 +6,12 @@ from datetime import datetime
 #user sigma
 class User(db.Model, UserMixin):
     __tablename__='user' # good practice to specify table name
-    id = db.Column(db.String, index=True, unique=True, nullable=False)
-    name = db.Column(db.String, index=True, unique=True, nullable=False, primary_key=True)
+    id = db.Column(db.Integer, index=True, unique=True, nullable=False, primary_key=True)
+    name = db.Column(db.String, index=True, unique=True, nullable=False)
     emailid = db.Column(db.String(255), index=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     def __repr__(self): #string print method
-        return "<name: {}, emailid: {}>".format(self.name, self.emailid)
+        return "<id:{},name: {}, emailid: {},>".format(self.id,self.name, self.emailid)
 
 
 
@@ -27,7 +27,7 @@ class Restaurant(db.Model, UserMixin):
     admin_id = db.Column(db.String, db.ForeignKey('user.name'))
 
     def __repr__(self): #string print method
-        return "<id: {}, image: {}, title: {}, description: {}, price: {}, address: {}>".format(self.id, self.image, self.title, self.description,self.price,self.address)
+        return "<id: {}, image: {}, title: {}, description: {}, address: {}>".format(self.id, self.image, self.title, self.description,self.address)
 
 #comment sigma
 class Comment(db.Model):
@@ -41,4 +41,4 @@ class Comment(db.Model):
     image = db.Column(db.String(255))
     def __repr__(self): #string print method
 
-         return "<id: {}, date: {}, user_name: {},item_id: {},mobile:{}>".format(self.id, self.date, self.user_name, self.item_id, self.mobile)
+         return "<id: {}, date: {},user_id:{},restaurant_id: {},rate{},image:{},comment:{}>".format(self.id, self.date, self.user_id, self.restaurant_id,self.rate,self.image,self.comment)

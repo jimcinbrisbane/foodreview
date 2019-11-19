@@ -22,14 +22,13 @@ li {
 }
 /* On hover */
 a:hover{
-    background-color: rgba(255, 255, 255, 0.075);
-    color:blue;
+    color:darkgrey;
     text-decoration: none;
 }
 
 /* default link color for header 1 */    
 h1 a{
-    color: whitesmoke;
+    color: black;
     text-decoration: none;
 }
 
@@ -47,8 +46,8 @@ h1{
     font-family: 'Permanent Marker', cursive !important;
 }
 
-a.text-light:focus, a.text-light:hover{
-    border-bottom: 1px solid blue !important;
+a.text-dark:focus, a.text-dark:hover{
+    border-bottom: 1px solid grey !important;
 }
 
 .flu{
@@ -78,7 +77,7 @@ body{
 #btn {
     background-color: rgb(2, 129, 255);
     border: none;
-    color: white;
+    color: black;
     padding: 12px 18px 1px 18px;
     text-align: center;
     font-size: 16px;

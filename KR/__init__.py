@@ -21,8 +21,7 @@ def create_app():
     # error handler
     @app.errorhandler(404)
     def not_found(e):
-       search_form = searchForm()
-       return render_template('404.html', search_form=search_form),404
+       return render_template('404.html'),404
    # get bootstrap init
     boostrap = Bootstrap(app)
     #initialize the login manager
@@ -38,8 +37,9 @@ def create_app():
     #create a user loader function takes userid and returns User
     from .models import User  # importing here to avoid circular references
     @login_manager.user_loader
-    def load_user(name):
-        return User.query.get(name)
+    def load_user(id):
+        print(id)
+        return User.query.get(id)
 
     from .views import mainbp
     app.register_blueprint(mainbp)

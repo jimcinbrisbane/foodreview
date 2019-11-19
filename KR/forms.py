@@ -25,8 +25,8 @@ class LoginForm(FlaskForm):
 # item form
 class restaurantForm(FlaskForm):
 
-    title = StringField('Fancy Title', validators=[InputRequired()],render_kw={"placeholder": "Get an eye tracking title"})
-    description = StringField('Room Description', validators=[InputRequired()],render_kw={"placeholder": "What makes your properity stand out?"})
+    title = StringField('Fancy Title', validators=[InputRequired()],render_kw={"placeholder": "Super ROYALE Restraunt"})
+    description = StringField('Restraunt Description', validators=[InputRequired()],render_kw={"placeholder": "About this restraunt"})
     image = FileField('Image (png,jpeg,jpg only)', validators=[FileRequired(),FileAllowed({ 'jpg', 'JPG', 'png', 'PNG','JPEG'}, 'Images only!')])
     address = StringField('Address', validators=[InputRequired()],render_kw={"placeholder": "2 George Street, Brisbane, 4000"})
     mobile = IntegerField('Contact Number', validators=[InputRequired()])
@@ -35,6 +35,6 @@ class restaurantForm(FlaskForm):
 # Search form
 class commentForm(FlaskForm):
     image = FileField('Image (png,jpeg,jpg only)', validators=[FileRequired(),FileAllowed({ 'jpg', 'JPG', 'png', 'PNG','JPEG'}, 'Images only!')])
-    comment = StringField('Room Description', validators=[InputRequired()],render_kw={"placeholder": "What makes your properity stand out?"})
+    comment = StringField('comment about the food', validators=[InputRequired()],render_kw={"placeholder": "What did you think?"})
     rate = StringField('Rating', validators=[InputRequired()],render_kw={"placeholder": "0-5"})
-    submit = SubmitField('Search')
+    submit = SubmitField('Comment')

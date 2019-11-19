@@ -17,19 +17,33 @@ mainbp = Blueprint('main',__name__)
 def index():
     tag_line='Food For Kidz'
     restaurant = Restaurant.query.order_by(Restaurant.id.desc()).all()
-    return render_template('homepage.html', restaurant = restaurant, tag_line=tag_line)
+    comments = Comment.query.order_by(Comment.id.desc()).all()
+    return render_template('homepage.html', comments=comments,restaurant = restaurant, tag_line=tag_line)
+
+@mainbp.route('/<id>')
+def item(id):
+    tag_line='Food For Kidz'
+    restaurant = Restaurant.query.order_by(Restaurant.id.desc()).all()
+    res = Restaurant.query.filter_by(id=id).first()  
+    comments = Comment.query.filter_by(restaurant_id=id)
+    return render_template('item.html', comments=comments,restaurant = restaurant,res=res,tag_line=tag_line)
+
 
 ############################################
 #admin form route
-@mainbp.route('/supersecrectadminpage')
+#item form route
+@mainbp.route('/newListing')
 def post():
     if current_user.is_anonymous:
-        return flash("ERROR: 418, coffee is not allowed to brew in a teapot")
+        return redirect('/login')
     else:
         print(current_user.name)
-    tag_line="This is us"
+
+    tag_line="New Restraunt"
+    
     aform = restaurantForm()
-    return render_template('index_reuse.html', tag_line=tag_line ,aform=aform)
+
+    return render_template('new.html', tag_line=tag_line,aform=aform)
 
 
 
@@ -37,7 +51,7 @@ def post():
 def commentdelete(id):
     #Delete Details
     try:
-     Comment.query.filter_by(id=id,user_name=current_user.name).delete()
+     Comment.query.filter_by(id=id,user_id=current_user.name).delete()
      db.session.commit()
      flash("comment deleteted")
     except:
@@ -46,7 +60,7 @@ def commentdelete(id):
     return redirect('/')
 
 #############################################
-#         D A T A B A S E - P A T H         #                
+#         I M A G E - P A T H               #                
 #############################################
 
 def check_upload_file(form):
@@ -71,15 +85,16 @@ def check_upload_file(form):
 @mainbp.route('/create', methods = ['GET','POST'])
 def create_item():
   aform = restaurantForm()
-  if aform.validate_on_submit():
-    db_file_path=check_upload_file(aform)
-    print(db_file_path)
+  print('whyy...')
+  print("noo")
+  db_file_path=check_upload_file(aform)
+  print(db_file_path)
     # a simple function: doesnot handle errors in file types and file not being uploaded
     
     # if the form was successfully submitted, access the values in the form data
     
     #insert restraunt into database
-    newr = Restaurant(id = datetime.datetime.now().isoformat(),#as you can see I used datetime as Primary Key
+  newr = Restaurant(id = datetime.datetime.now().isoformat(),#as you can see I used datetime as Primary Key
                 title=aform.title.data, 
                 description=aform.description.data,
                 image= db_file_path,
@@ -89,13 +104,13 @@ def create_item():
                 )
 
     #add the object to the db session
-    db.session.add(newr)
+  db.session.add(newr)
     
     #commit to the database
-    db.session.commit()
-    flash('Successfully created new restraunt', 'success')
-    print('Successfully created new restraunt', 'success')
-    return redirect(url_for('main.index'))
+  db.session.commit()
+  flash('Successfully created new restraunt', 'success')
+  print('Successfully created new restraunt', 'success')
+  return redirect(url_for('main.index'))
 
 
 #############################################
@@ -138,29 +153,28 @@ def update_item():
 #           ADD COMMENT                      #
 #############################################
 @mainbp.route('/write_comment/<id>')
-def comment():
+def comment(id):
     commentF = commentForm()
-    id = id
-    return render_template('comment.html',commentF = commentF, id=id)
-@mainbp.route('/post_comment/<id>', methods = ['GET','POST'])
+    a = id
+    return render_template('comment.html',commentF = commentF, a=id)
+@mainbp.route('/post_comment/<id>', methods = ['POST'])
 def new_comment(id):
     commentF = commentForm()
-    if commentF.validate_on_submit():
-        img=check_upload_file(comment)
-        newcomment=Comment(date=datetime.datetime.now(),
-            restaurant_id=id,
-            user_id=current_user.name,
-            comment= comment.comment.data,
-            rate= comment.rate.data,
-            image = img
-
-            )
-        print(datetime.datetime.now(),id,current_user.id)
-        db.session.add(newcomment)
-        db.session.commit()
-        flash('comment had post')
-        print('comment', comment)
-    return redirect(url_for('main.index'), commentF=commentF)
+    print(current_user)
+    print("no")
+    img=check_upload_file(commentF)
+    newcomment=Comment(date=datetime.datetime.now(),
+           restaurant_id=id,
+           user_id=current_user.name,
+           comment= commentF.comment.data,
+           rate= commentF.rate.data,
+           image = img)
+    db.session.add(newcomment)
+    db.session.commit()
+    print(datetime.datetime.now(),id,current_user.name,commentF.comment.data,commentF.rate.data,img)
+    flash('comment had post')
+    
+    return redirect(url_for('main.index'))
     
 #############################################
 #           R E G I S T R A T I O N         #                
@@ -178,17 +192,16 @@ def register():
         print('Register Form Submitted')
         #get username,password and email from the form
         username = registerform.user_name.data
-        pass_word = registerform.password.data
+        password = registerform.password.data
         email = registerform.email.data
-        id=datetime.datetime.now().isoformat()
 
 
         #create password hash, salted for security
-        hashWord = generate_password_hash(pass_word+username)
+        hashWord = generate_password_hash(password+username)
 
         #create a new user account
         try: 
-            newUser = User(name=username, emailid=email,id=id, password_hash=hashWord)
+            newUser = User(name=username, emailid=email, password_hash=hashWord)
             db.session.add(newUser)
             db.session.commit()
             return redirect(url_for('main.login'))
@@ -200,16 +213,6 @@ def register():
 #############################################
 #                 L O G I N                 #                
 #############################################
-#initialize login management
-login_manager = LoginManager()
-
-#create name of the login function that lets users login
-login_manager.login_view ='auth.login'
-
-#create a user load in function that goes by userID
-@login_manager.user_loader
-def load_user(user_id):
-    return User.get(u1)
 
 #routing for login
 @mainbp.route('/login')
